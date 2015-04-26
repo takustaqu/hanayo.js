@@ -10,7 +10,7 @@ var stagekit = {};
 
 function isElement(obj) {
   try {
-    //Using W3 DOM2 (works for FF, Opera and Chrom)
+    //Using W3 DOM2 (Firefox, Opera , Google Chrome)
     return obj instanceof HTMLElement;
   }
   catch(e){
@@ -52,14 +52,15 @@ $s.Stage.prototype.render = function(){
 
 		//回転処理
 		if(!!cast.rotate){
-
 			ctx.translate((cast.size[0]/2) ,  (cast.size[1]/2));
-
 			ctx.rotate(cast.rotate * Math.PI / 180 );
-
 			ctx.translate(-1*(cast.size[0]/2) ,-1*(cast.size[1]/2));
+		}
 
-
+		if(!!cast.scale){
+			ctx.translate((cast.size[0]/2) ,  (cast.size[1]/2));
+			ctx.scale(cast.scale,cast.scale);
+			ctx.translate(-1*(cast.size[0]/2) ,-1*(cast.size[1]/2));
 		}
 
 		if(cast.sourceType == "image"){
@@ -117,6 +118,7 @@ $s.Cast = function(arg){
 	this.translate = !!arg.translate ? arg.translate : [0,0] ;
 	this.rotate = !!arg.rotate ? arg.rotate : 0 ;
 	this.opacity = !!arg.opacity ? arg.opacity : 1 ;
+	this.scale = !!arg.scale ? arg.scale : 1 ;
 }
 
 $s.Cast.prototype.detectSourceType = function(){
