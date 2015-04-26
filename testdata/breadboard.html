@@ -46,7 +46,9 @@ var casts = [
 			source:$img_rect,
 			layer:200,
 			rotate:0,
-			scale:1.5
+			scale:1.5,
+			show:false,
+			layerMode:'lighter'
 		},
 		{
 			name:"zero",
@@ -55,22 +57,22 @@ var casts = [
 			source:$img_star,
 			translate:[0,0],
 			layer:0,
-			opacity:0.2
-
+			opacity:0.2,
 		},
 	]
 
 var stageNormal = new $s.Stage($("#main")[0]);
 
-
-
 stageNormal.addCasts(casts);
 
 setInterval(function(){
+	stageNormal.casts.second.rotate = stageNormal.casts.second.rotate + 1
+	if(stageNormal.casts.second.rotate > 90){
+		stageNormal.casts.second.rotate = stageNormal.casts.second.rotate - 90;
+	}
 
 	stageNormal.render();
-	stageNormal.casts.first.rotate = stageNormal.casts.first.rotate + 10
-
+	
 
 },50)
 

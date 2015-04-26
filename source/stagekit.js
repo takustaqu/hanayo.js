@@ -9,21 +9,15 @@ var stagekit = {};
 
 
 function isElement(obj) {
+　//referred this article.
+　//-> http://stackoverflow.com/questions/384286/javascript-isdom-how-do-you-check-if-a-javascript-object-is-a-dom-object/384380#384380
   try {
-    //Using W3 DOM2 (Firefox, Opera , Google Chrome)
     return obj instanceof HTMLElement;
   }
   catch(e){
-    //Browsers not supporting W3 DOM2 don't have HTMLElement and
-    //an exception is thrown and we end up here. Testing some
-    //properties that all elements have. (works on IE7)
-    return (typeof obj==="object") &&
-      (obj.nodeType===1) && (typeof obj.style === "object") &&
-      (typeof obj.ownerDocument ==="object");
+    return false;
   }
 }
-
-
 
 //ステージを定義
 $s.Stage = function(canvasElem){
@@ -40,38 +34,58 @@ $s.Stage.prototype.render = function(){
 	ctx.clearRect(0, 0, this.canvasSize[0],this.canvasSize[1]);
 
 	for(var i=0,il=this.layers.length; i<il; i++){
-		ctx.save();
+
 		var cast = this.layers[i];
 
-		//位置指定
-		var tls = [cast.translate[0] + cast.position[0] , cast.translate[0] + cast.position[0]]
-		ctx.translate(tls[0],tls[1]);
+		if(cast.show){ // Check cast has not set hidden.
 
-		//α
-		ctx.globalAlpha = cast.opacity;
+			//save canvas transform state.
+			ctx.save();		
 
-		//回転処理
-		if(!!cast.rotate){
-			ctx.translate((cast.size[0]/2) ,  (cast.size[1]/2));
-			ctx.rotate(cast.rotate * Math.PI / 180 );
-			ctx.translate(-1*(cast.size[0]/2) ,-1*(cast.size[1]/2));
-		}
+			//set position
+			var tls = [cast.translate[0] + cast.position[0] , cast.translate[0] + cast.position[0]]
+			ctx.translate(tls[0],tls[1]);
 
-		if(!!cast.scale){
-			ctx.translate((cast.size[0]/2) ,  (cast.size[1]/2));
-			ctx.scale(cast.scale,cast.scale);
-			ctx.translate(-1*(cast.size[0]/2) ,-1*(cast.size[1]/2));
-		}
+			//transparent 
+			ctx.globalAlpha = cast.opacity;
 
-		if(cast.sourceType == "image"){
-			ctx.drawImage( cast.source ,
-				0,0, 
-				cast.source.width , cast.source.height ,
-				0,0, 
-				cast.source.width , cast.source.height )
-		}
+			//rotateing
+			if(!!cast.rotate){
+				ctx.translate((cast.size[0]/2) ,  (cast.size[1]/2));
+				ctx.rotate(cast.rotate * Math.PI / 180 );
+				ctx.translate(-1*(cast.size[0]/2) ,-1*(cast.size[1]/2));
+			}
 
-		ctx.restore();
+			//scaling
+			if(!!cast.scale){
+				ctx.translate((cast.size[0]/2) ,  (cast.size[1]/2));
+				ctx.scale(cast.scale,cast.scale);
+				ctx.translate(-1*(cast.size[0]/2) ,-1*(cast.size[1]/2));
+			}
+
+			//Layer mode(canvas)
+			if(!!cast.layerMode){
+				ctx.globalCompositeOperation = cast.layerMode;
+			}
+			
+			if(cast.sourceType == "image"){
+			//IMG要素であることを確認出来ている場合は、drawImageの対象とする。
+
+				ctx.drawImage( cast.source ,
+					0,0, 
+					cast.source.width , cast.source.height ,
+					0,0, 
+					cast.source.width , cast.source.height );
+
+			}else if(cast.sourceType == "function"){
+			//Sourceに関数が渡されている場合、第1引数にctx,第1引数にcastの内容が引き渡される。
+
+			};
+
+			ctx.restore();
+
+		}//isShown
+
 	};
 
 }
@@ -79,13 +93,10 @@ $s.Stage.prototype.render = function(){
 $s.Stage.prototype.addCasts = function(casts){
 	var i=0 , il=0;
 	if(!!casts){
-
 		for(var i=0,il=casts.length; i<il; i++){
 			this.layers.push(casts[i]);
 		}//for
-
 	}//if
-
 	this.sortLayers();
 }
 
@@ -118,7 +129,9 @@ $s.Cast = function(arg){
 	this.translate = !!arg.translate ? arg.translate : [0,0] ;
 	this.rotate = !!arg.rotate ? arg.rotate : 0 ;
 	this.opacity = !!arg.opacity ? arg.opacity : 1 ;
+	this.show = arg.show === false ? false : true;
 	this.scale = !!arg.scale ? arg.scale : 1 ;
+	this.layerMode = !!arg.layerMode ? arg.layerMode : false ;
 }
 
 $s.Cast.prototype.detectSourceType = function(){
