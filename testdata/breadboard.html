@@ -3,8 +3,53 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
+	<script src="../source/stagekit.js"></script>
 </head>
 <body>
+
+<script>
+
+
+var casts = [
+		{
+			name:"first",
+			size:[100,200],
+			position:[0,0],
+			source:"imagename",
+			layer:100
+		},
+		{
+			name:"second",
+			size:[100,200],
+			position:[0,0],
+			source:"imagename",
+			layer:200
+		},
+		{
+			name:"third",
+			size:[100,200],
+			position:[0,0],
+			source:"imagename",
+			layer:300
+		},
+		{
+			name:"zero",
+			size:[100,200],
+			position:[0,0],
+			source:"imagename",
+			layer:0
+		},
+	]
+
+
+var stageNormal = new $s.Stage();
+
+
+stageNormal.addCasts(casts);
+
+
+
+</script>
 	
 </body>
 </html>
