@@ -4,50 +4,74 @@
 	<meta charset="UTF-8">
 	<title></title>
 	<script src="../source/stagekit.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
+<style>
+	body{background-color: #ccc;}
+</style>
+<div id="images">
+	<img src="images/circle.png"  id="img_circle"alt="">
+	<img src="images/rect.png"  id="img_rect"alt="">
+	<img src="images/star.png"  id="img_star"alt="">
+</div>
+
+<canvas id="main" width="400" height="400">
+</canvas>
+
 
 <script>
+
+var $img_circle = $("#img_circle")[0];
+var $img_rect = $("#img_rect")[0];
+var $img_star = $("#img_star")[0];
+
+setTimeout(function(){
+	$(function(){$("#images").hide()});
+},10);
 
 
 var casts = [
 		{
 			name:"first",
-			size:[100,200],
-			position:[0,0],
-			source:"imagename",
+			size:[200,200],
+			position:[20,20],
+			source:$img_circle,
 			layer:100
 		},
 		{
 			name:"second",
-			size:[100,200],
+			size:[200,200],
 			position:[0,0],
-			source:"imagename",
-			layer:200
-		},
-		{
-			name:"third",
-			size:[100,200],
-			position:[0,0],
-			source:"imagename",
-			layer:300
+			source:$img_rect,
+			layer:200,
+			rotate:20
 		},
 		{
 			name:"zero",
-			size:[100,200],
+			size:[200,200],
 			position:[0,0],
-			source:"imagename",
-			layer:0
+			source:$img_star,
+			translate:[0,0],
+			layer:0,
+			opacity:0.2
+
 		},
 	]
 
+var stageNormal = new $s.Stage($("#main")[0]);
 
-var stageNormal = new $s.Stage();
 
 
 stageNormal.addCasts(casts);
 
+setInterval(function(){
 
+	stageNormal.render();
+	stageNormal.casts.first.rotate = stageNormal.casts.first.rotate + 10
+
+
+},50)
 
 </script>
 	
