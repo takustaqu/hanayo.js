@@ -5,6 +5,7 @@
 	<title></title>
 	<script src="../source/stagekit.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="lib/radkit.js"></script>
 </head>
 <body>
 <style>
@@ -25,6 +26,17 @@
 var $img_circle = $("#img_circle")[0];
 var $img_rect = $("#img_rect")[0];
 var $img_star = $("#img_star")[0];
+
+
+var osc_1 = new Radkit();
+var osc_2 = new Radkit();
+var osc_3 = new Radkit();
+
+osc_1.setAngle(0);
+osc_2.setAngle(0);
+osc_3.setAngle(0);
+
+
 
 setTimeout(function(){
 	$(function(){$("#images").hide()});
@@ -47,7 +59,6 @@ var casts = [
 			layer:200,
 			rotate:0,
 			scale:1.5,
-			show:false,
 			layerMode:'lighter'
 		},
 		{
@@ -65,16 +76,52 @@ var stageNormal = new $s.Stage($("#main")[0]);
 
 stageNormal.addCasts(casts);
 
+
+(function() {
+
+	var requestAnimationFrame = 
+		window.requestAnimationFrame || 
+		window.mozRequestAnimationFrame || 
+		window.webkitRequestAnimationFrame || 
+		window.msRequestAnimationFrame;
+
+    window.requestAnimationFrame = requestAnimationFrame;
+
+})();
+
+(function loop(){
+
+	stageNormal.render();
+	
+    window.requestAnimationFrame(loop);
+
+})();
+
+
 setInterval(function(){
+
+	osc_1.setAngle(osc_1.angle + 5);
+	osc_2.setAngle(osc_2.angle + 30);
+	osc_3.setAngle(osc_3.angle + 10);
+	
+	var position = osc_1.getPosition(0,0,100);
+	var position2 = osc_2.getPosition(0,0,10);
+	var position3 = osc_3.getPosition(0,0,20);
+
 	stageNormal.casts.second.rotate = stageNormal.casts.second.rotate + 1
 	if(stageNormal.casts.second.rotate > 90){
 		stageNormal.casts.second.rotate = stageNormal.casts.second.rotate - 90;
 	}
 
-	stageNormal.render();
-	
+	stageNormal.casts.second.rotate = stageNormal.casts.second.rotate + 1
+	stageNormal.casts.zero.rotate = stageNormal.casts.zero.rotate + 1.2
+	stageNormal.casts.first.rotate = stageNormal.casts.first.rotate - 1.1
 
-},50)
+	stageNormal.casts.second.translate = [position.x,position.y];
+	stageNormal.casts.zero.translate = [position3.x,position3.y];
+	stageNormal.casts.first.translate = [position2.x,position2.y];
+
+},40)
 
 </script>
 	
