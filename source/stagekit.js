@@ -92,10 +92,17 @@ $s.Stage.prototype.render = function(){
 
 $s.Stage.prototype.addCasts = function(casts){
 	var i=0 , il=0;
+
 	if(!!casts){
-		for(var i=0,il=casts.length; i<il; i++){
-			this.layers.push(casts[i]);
-		}//for
+
+		if(!!casts.source){
+			this.layers.push(casts);
+		}else{
+			for(var i=0,il=casts.length; i<il; i++){
+				this.layers.push(casts[i]);
+			}//for
+		}
+		
 	}//if
 	this.sortLayers();
 }
@@ -117,6 +124,22 @@ $s.Stage.prototype.sortLayers = function(){
 		console.log(this.layers[i].name)
 		this.casts[this.layers[i].name] = this.layers[i];
 	}
+}
+
+$s.Stage.prototype.removeLayer = function(alias,all){
+
+	$.each(stageNormal.layers,function(i){
+	  if(this.name.match(alias)){
+	    stageNormal.layers.splice(i, 1);
+
+	    delete stageNormal.casts[alias];
+
+	    if(!all){
+	    	return false;
+	    }
+
+	  }
+	})
 }
 
 $s.Cast = function(arg){
