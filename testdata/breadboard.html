@@ -6,6 +6,7 @@
 	<script src="../source/stagekit.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="lib/radkit.js"></script>
+	<script src="https://rawgit.com/takustaqu/pudding/develop/source/pudding.js"></script>
 </head>
 <body>
 <style>
@@ -15,6 +16,7 @@
 	<img src="images/circle.png"  id="img_circle"alt="">
 	<img src="images/rect.png"  id="img_rect"alt="">
 	<img src="images/star.png"  id="img_star"alt="">
+	<img src="images/grid_with_radial.png" id="img_pudding"alt="">
 </div>
 
 <canvas id="main" width="400" height="400">
@@ -36,6 +38,10 @@ osc_1.setAngle(0);
 osc_2.setAngle(0);
 osc_3.setAngle(0);
 
+
+
+//if running on Safari, must be adding load-complete checking.
+var x = new p.gn.CrossSplit($("#img_pudding").get(0),[0.5,0.5]);
 
 
 setTimeout(function(){
@@ -70,6 +76,19 @@ var casts = [
 			layer:0,
 			opacity:0.2,
 		},
+		{
+			name:"pudding",
+			size:[200,200],
+			position:[0,0],
+			source:function(ctx,pos){
+				var pos = osc_3.getPosition(0,0,20)
+				x.render(ctx,0,0,171,171,pos.x,pos.y);
+			},
+			translate:[0,0],
+			layer:1000,
+			opacity:0,
+		},
+
 	]
 
 var stageNormal = new $s.Stage($("#main")[0]);

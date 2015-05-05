@@ -77,9 +77,11 @@ $s.Stage.prototype.render = function(){
 					0,0, 
 					cast.source.width , cast.source.height );
 
-			}else if(cast.sourceType == "function"){
-			//Sourceに関数が渡されている場合、第1引数にctx,第1引数にcastの内容が引き渡される。
+			}
 
+			if(typeof cast.source == "function"){
+			//Sourceに関数が渡されている場合、第1引数にctx,第1引数にcastの内容が引き渡される。
+				cast.source(ctx,cast);
 			};
 
 			ctx.restore();
