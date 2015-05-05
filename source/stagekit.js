@@ -95,7 +95,7 @@ $s.Stage.prototype.addCasts = function(casts){
 
 	if(!!casts){
 
-		if(!!casts.source){
+		if(!!casts.name){
 			this.layers.push(casts);
 		}else{
 			for(var i=0,il=casts.length; i<il; i++){
@@ -121,7 +121,6 @@ $s.Stage.prototype.sortLayers = function(){
 
 	for(var i=0,il=this.layers.length; i<il; i++){
 		this.layers[i] = new $s.Cast(this.layers[i]);
-		console.log(this.layers[i].name)
 		this.casts[this.layers[i].name] = this.layers[i];
 	}
 }
