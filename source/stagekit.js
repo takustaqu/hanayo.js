@@ -43,7 +43,7 @@ $s.Stage.prototype.render = function(){
 			ctx.save();		
 
 			//set position
-			var tls = [cast.translate[0] + cast.position[0] , cast.translate[0] + cast.position[0]]
+			var tls = [cast.translate[0] + cast.position[0] , cast.translate[1] + cast.position[1]];
 			ctx.translate(tls[0],tls[1]);
 
 			//transparent 
