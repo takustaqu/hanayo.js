@@ -127,12 +127,14 @@ $s.Stage.prototype.sortLayers = function(){
 }
 
 $s.Stage.prototype.removeLayer = function(alias,all){
-
-	$.each(stageNormal.layers,function(i){
+	
+	var layers = this.layers;
+	var casts = this.casts;
+	$.each(layers,function(i){
 	  if(this.name.match(alias)){
-	    stageNormal.layers.splice(i, 1);
+	    layers.splice(i, 1);
 
-	    delete stageNormal.casts[alias];
+	    delete casts[alias];
 
 	    if(!all){
 	    	return false;
