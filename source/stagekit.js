@@ -153,8 +153,8 @@ $s.Cast = function(arg){
 	this.source = arg.source;
 	this.sourceType = this.detectSourceType(arg.source);
 	this.translate = !!arg.translate ? arg.translate : [0,0] ;
-	this.rotate = !!arg.rotate ? arg.rotate : 0 ;
-	this.opacity = !!arg.opacity ? arg.opacity : 1 ;
+	this.rotate = typeof arg.rotate != "undefined" ? arg.rotate : 0 ;
+	this.opacity = typeof arg.opacity != "undefined" ? arg.opacity : 1 ;
 	this.show = arg.show === false ? false : true;
 	this.scale = !!arg.scale ? arg.scale : 1 ;
 	this.layerMode = !!arg.layerMode ? arg.layerMode : false ;
