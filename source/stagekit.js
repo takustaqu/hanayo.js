@@ -70,7 +70,6 @@ $s.Stage.prototype.render = function(){
 			
 			if(cast.sourceType == "image"){
 			//IMG要素であることを確認出来ている場合は、drawImageの対象とする。
-
 				ctx.drawImage( cast.source ,
 					0,0, 
 					cast.source.width , cast.source.height ,
@@ -147,6 +146,7 @@ $s.Stage.prototype.removeLayer = function(alias,all){
 
 $s.Cast = function(arg){
 	this.name = arg.name;
+	this.image = !!arg.image ? arg.image : false;
 	this.size = arg.size;
 	this.position = arg.position;
 	this.layer = arg.layer;
