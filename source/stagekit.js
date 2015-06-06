@@ -38,20 +38,18 @@ $s.Stage.prototype.render = function(){
 	ctx.clearRect(0, 0, this.canvasSize[0],this.canvasSize[1]);
 
 	for(var i=0,il=this.layers.length; i<il; i++){
-
 		var cast = this.layers[i];
 
-		if(cast.show){ // Check cast has not set hidden.
-
+		if(cast.show && cast.opacity != 0){ // Check cast has not set hidden.
 			//save canvas transform state.
-			ctx.save();		
-
+			ctx.save();
+		
 			//set position
-			var tls = [cast.translate[0] + cast.position[0] , cast.translate[1] + cast.position[1]];
-			ctx.translate(tls[0],tls[1]);
-
+			var tls = [cast.translate[0] + cast.position[0] , cast.translate[1] + cast.position[1]];			
+			if(!!tls[0] && !!tls[1]) ctx.translate(tls[0],tls[1]) ;
+		
 			//transparent 
-			ctx.globalAlpha = cast.opacity;
+			if(cast.opacity < 1) ctx.globalAlpha = cast.opacity ;
 
 			//rotateing
 			if(!!cast.rotate){
@@ -68,10 +66,8 @@ $s.Stage.prototype.render = function(){
 			}
 
 			//Layer mode(canvas)
-			if(!!cast.layerMode){
-				ctx.globalCompositeOperation = cast.layerMode;
-			}
-			
+			if(!!cast.layerMode) ctx.globalCompositeOperation = cast.layerMode ;
+
 			if(cast.sourceType == "image"){
 			//IMG要素であることを確認出来ている場合は、drawImageの対象とする。
 				ctx.drawImage( cast.source ,
@@ -79,13 +75,11 @@ $s.Stage.prototype.render = function(){
 					cast.source.width , cast.source.height ,
 					0,0, 
 					cast.source.width , cast.source.height );
-
-			}
-
-			if(typeof cast.source == "function"){
+			}else if(typeof cast.source == "function"){
 			//Sourceに関数が渡されている場合、第1引数にctx,第1引数にcastの内容が引き渡される。
 				cast.source(ctx,cast);
-			};
+
+			}
 
 			ctx.restore();
 
@@ -175,7 +169,7 @@ $s.Cast.prototype.detectSourceType = function(){
 //prop,duration,easing,callback
 $s.Cast.prototype.animate = function(p,d,e,c){
 	
-	var fps = 30,
+	var fps = 60,
 		duration = !!d ? d : 1000,
 		interval = Math.floor(1000/fps),
 		length = Math.floor(duration/interval),
