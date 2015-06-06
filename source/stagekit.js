@@ -20,12 +20,16 @@ function isElement(obj) {
 }
 
 //ステージを定義
-$s.Stage = function(canvasElem){
+$s.Stage = function(canvasElem,option){
 	this.canvas = canvasElem;
 	this.canvasSize = [canvasElem.width,canvasElem.height];
 	this.ctx = canvasElem.getContext("2d");
 	this.layers = [];
 	this.casts = {};
+
+	this.option = {
+		"animationFps" : 30,
+	}
 }
 
 $s.Stage.prototype.render = function(){
@@ -168,6 +172,52 @@ $s.Cast.prototype.detectSourceType = function(){
 	}
 }
 
+//prop,duration,easing,callback
+$s.Cast.prototype.animate = function(p,d,e,c){
+	
+	var fps = 30,
+		duration = !!d ? d : 1000,
+		interval = Math.floor(1000/fps),
+		length = Math.floor(duration/interval),
+		i = 0,
+		start = {},
+		cast = this;
+		
+	for(key in p){ start[key] = this[key];};
+
+	var ease = (function(){
+		if(!e || e === "linear"){
+			//linearTween
+			return function (t,b,c,d){ return c*t/d + b };
+		}else if(e == "swing" || e == "easeInOutQuad"){
+			//easeInOutQuad
+			return function (t,b,c,d) {
+			    t /= d/2;
+			    if (t < 1) return c/2*t*t + b;
+			    t--;
+			    return -c/2 * (t*(t-2) - 1) + b;
+			};
+		};
+	})();
+	
+	
+	var timer = setInterval(function(){
+		
+		for(key in p){
+			if(typeof start[key] == "object"){
+				for(var j=0,jl=start[key].length;j<jl;j++){
+					cast[key][j] = ease(i,start[key][j],p[key][j]-start[key][j],length);
+				}
+			}else{
+				cast[key] = ease(i,start[key],p[key]-start[key],length);
+			}
+		}
+		
+		if(length <= i) {clearInterval(timer);c.call();}
+		
+		++i;
+	},interval);
+}
 
 $s.Rig = function(){
 }
